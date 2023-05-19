@@ -1,0 +1,455 @@
+[
+  {
+    "id": 10004,
+    "name": "Brelshaza",
+    "difficulty": "normal",
+    "category": "Legion Raid",
+    "gate": 4,
+    "target": [
+      {
+        "type_id": 480811,
+        "max_hp": 0
+      }
+    ]
+  },
+  {
+    "id": 10015,
+    "name": "Brelshaza",
+    "difficulty": "hard",
+    "category": "Legion Raid",
+    "gate": 5,
+    "target": [
+      {
+        "type_id": 480813,
+        "max_hp": 0
+      }
+    ]
+  },
+  {
+    "id": 10016,
+    "name": "Brelshaza",
+    "difficulty": "hard",
+    "category": "Legion Raid",
+    "gate": 6,
+    "target": [
+      {
+        "type_id": 480814,
+        "max_hp": 0
+      }
+    ]
+  },
+  {
+    "id": 10211,
+    "name": "Vykas",
+    "difficulty": "hard",
+    "category": "Legion Raid",
+    "gate": 2,
+    "target": [
+      {
+        "type_id": 480210,
+        "max_hp": 3217098505
+      }
+    ]
+  },
+  {
+    "id": 1,
+    "name": "Argos",
+    "difficulty": "normal",
+    "category": "Abyss Raid",
+    "gate": -1,
+    "target": []
+  },
+  {
+    "id": 10000,
+    "name": "Brelshaza",
+    "difficulty": "",
+    "category": "Legion Raid",
+    "gate": 0,
+    "target": [
+      {
+        "type_id": 480831,
+        "max_hp": 0
+      },
+      {
+        "type_id": 480823,
+        "max_hp": 0
+      }
+    ]
+  },
+  {
+    "id": 10001,
+    "name": "Brelshaza",
+    "difficulty": "normal",
+    "category": "Legion Raid",
+    "gate": 1,
+    "target": [
+      {
+        "type_id": 480806,
+        "max_hp": 0
+      },
+      {
+        "type_id": 480805,
+        "max_hp": 0
+      },
+      {
+        "type_id": 480874,
+        "max_hp": 0
+      },
+      {
+        "type_id": 480875,
+        "max_hp": 0
+      },
+      {
+        "type_id": 480876,
+        "max_hp": 0
+      },
+      {
+        "type_id": 480877,
+        "max_hp": 0
+      },
+      {
+        "type_id": 480878,
+        "max_hp": 0
+      },
+      {
+        "type_id": 480807,
+        "max_hp": 0
+      },
+      {
+        "type_id": 480803,
+        "max_hp": 0
+      },
+      {
+        "type_id": 480804,
+        "max_hp": 0
+      },
+      {
+        "type_id": 480802,
+        "max_hp": 0
+      }
+    ]
+  },
+  {
+    "id": 10003,
+    "name": "Brelshaza",
+    "difficulty": "normal",
+    "category": "Legion Raid",
+    "gate": 3,
+    "target": [
+      {
+        "type_id": 480810,
+        "max_hp": 0
+      }
+    ]
+  },
+  {
+    "id": 10212,
+    "name": "Vykas",
+    "difficulty": "hard",
+    "category": "Legion Raid",
+    "gate": 3,
+    "target": [
+      {
+        "type_id": 480211,
+        "max_hp": 3096615841
+      }
+    ]
+  },
+  {
+    "id": 20000,
+    "name": "Caliligos",
+    "difficulty": "",
+    "category": "Guardian Raid",
+    "gate": -1,
+    "target": [
+      {
+        "type_id": 620250,
+        "max_hp": 0
+      }
+    ]
+  },
+  {
+    "id": 20001,
+    "name": "Kungelanium",
+    "difficulty": "",
+    "category": "Guardian Raid",
+    "gate": -1,
+    "target": [
+      {
+        "type_id": 620290,
+        "max_hp": 0
+      }
+    ]
+  },
+  {
+    "id": 10100,
+    "name": "Kakul-Saydon",
+    "difficulty": "normal",
+    "category": "Legion Raid",
+    "gate": 1,
+    "target": [
+      {
+        "type_id": 480601,
+        "max_hp": 0
+      }
+    ]
+  },
+  {
+    "id": 10102,
+    "name": "Kakul-Saydon",
+    "difficulty": "normal",
+    "category": "Legion Raid",
+    "gate": 3,
+    "target": [
+      {
+        "type_id": 480631,
+        "max_hp": 0
+      },
+      {
+        "type_id": 480635,
+        "max_hp": 0
+      }
+    ]
+  },
+  {
+    "id": 10310,
+    "name": "Valtan",
+    "difficulty": "hard",
+    "category": "Legion Raid",
+    "gate": 1,
+    "target": [
+      {
+        "type_id": 480006,
+        "max_hp": 0
+      },
+      {
+        "type_id": 480010,
+        "max_hp": 0
+      },
+      {
+        "type_id": 480005,
+        "max_hp": 0
+      },
+      {
+        "type_id": 480009,
+        "max_hp": 0
+      }
+    ]
+  },
+  {
+    "id": 10002,
+    "name": "Brelshaza",
+    "difficulty": "normal",
+    "category": "Legion Raid",
+    "gate": 2,
+    "target": [
+      {
+        "type_id": 480809,
+        "max_hp": 0
+      },
+      {
+        "type_id": 480808,
+        "max_hp": 0
+      }
+    ]
+  },
+  {
+    "id": 10006,
+    "name": "Brelshaza",
+    "difficulty": "normal",
+    "category": "Legion Raid",
+    "gate": 6,
+    "target": [
+      {
+        "type_id": 480814,
+        "max_hp": 0
+      }
+    ]
+  },
+  {
+    "id": 10012,
+    "name": "Brelshaza",
+    "difficulty": "hard",
+    "category": "Legion Raid",
+    "gate": 2,
+    "target": [
+      {
+        "type_id": 480809,
+        "max_hp": 0
+      },
+      {
+        "type_id": 480808,
+        "max_hp": 0
+      }
+    ]
+  },
+  {
+    "id": 10014,
+    "name": "Brelshaza",
+    "difficulty": "hard",
+    "category": "Legion Raid",
+    "gate": 4,
+    "target": [
+      {
+        "type_id": 480811,
+        "max_hp": 0
+      }
+    ]
+  },
+  {
+    "id": 10005,
+    "name": "Brelshaza",
+    "difficulty": "normal",
+    "category": "Legion Raid",
+    "gate": 5,
+    "target": [
+      {
+        "type_id": 480813,
+        "max_hp": 0
+      }
+    ]
+  },
+  {
+    "id": 10101,
+    "name": "Kakul-Saydon",
+    "difficulty": "normal",
+    "category": "Legion Raid",
+    "gate": 2,
+    "target": [
+      {
+        "type_id": 480611,
+        "max_hp": 0
+      }
+    ]
+  },
+  {
+    "id": 10311,
+    "name": "Valtan",
+    "difficulty": "hard",
+    "category": "Legion Raid",
+    "gate": 2,
+    "target": [
+      {
+        "type_id": 480007,
+        "max_hp": 0
+      },
+      {
+        "type_id": 480008,
+        "max_hp": 0
+      }
+    ]
+  },
+  {
+    "id": 30000,
+    "name": "Achates",
+    "difficulty": "",
+    "category": "Trial Guardian Raid",
+    "gate": -1,
+    "target": [
+      {
+        "type_id": 620146,
+        "max_hp": 0
+      }
+    ]
+  },
+  {
+    "id": 10011,
+    "name": "Brelshaza",
+    "difficulty": "hard",
+    "category": "Legion Raid",
+    "gate": 1,
+    "target": [
+      {
+        "type_id": 480806,
+        "max_hp": 0
+      },
+      {
+        "type_id": 480805,
+        "max_hp": 0
+      },
+      {
+        "type_id": 480874,
+        "max_hp": 0
+      },
+      {
+        "type_id": 480875,
+        "max_hp": 0
+      },
+      {
+        "type_id": 480876,
+        "max_hp": 0
+      },
+      {
+        "type_id": 480877,
+        "max_hp": 0
+      },
+      {
+        "type_id": 480878,
+        "max_hp": 0
+      },
+      {
+        "type_id": 480807,
+        "max_hp": 0
+      },
+      {
+        "type_id": 480803,
+        "max_hp": 0
+      },
+      {
+        "type_id": 480804,
+        "max_hp": 0
+      },
+      {
+        "type_id": 480802,
+        "max_hp": 0
+      }
+    ]
+  },
+  {
+    "id": 10013,
+    "name": "Brelshaza",
+    "difficulty": "hard",
+    "category": "Legion Raid",
+    "gate": 3,
+    "target": [
+      {
+        "type_id": 480810,
+        "max_hp": 0
+      }
+    ]
+  },
+  {
+    "id": 10210,
+    "name": "Vykas",
+    "difficulty": "hard",
+    "category": "Legion Raid",
+    "gate": 1,
+    "target": [
+      {
+        "type_id": 480208,
+        "max_hp": 1570502095
+      },
+      {
+        "type_id": 480209,
+        "max_hp": 1752282957
+      }
+    ]
+  },
+  {
+    "id": 20002,
+    "name": "Hanumatan",
+    "difficulty": "",
+    "category": "Guardian Raid",
+    "gate": -1,
+    "target": [
+      {
+        "type_id": 620280,
+        "max_hp": 0
+      },
+      {
+        "type_id": 620281,
+        "max_hp": 0
+      }
+    ]
+  }
+]

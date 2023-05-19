@@ -1,0 +1,168 @@
+syntax = "proto3";
+package lsb.v1;
+
+import "google/protobuf/timestamp.proto";
+option go_package = "github.com/b1naryth1ef/shandi/lsb/proto/v1";
+
+message Event {
+    google.protobuf.Timestamp ts = 1;
+    oneof data {
+        EventSpawn spawn = 3;
+        EventRemove remove = 4;
+        EventCounter counter = 5;
+        EventDeath death = 6;
+        EventDamage damage = 7;
+        EventTrigger trigger = 8;
+        EventStatusEffectAdd status_effect_add = 9;
+        EventStatusEffectUpdate status_effect_update = 10;
+        EventStatusEffectRemove status_effect_remove = 11;
+        EventSkillUse skill_use = 12;
+        EventStaggerState stagger_state = 13;
+        EventPlayerHealth player_health = 15;
+    }
+}
+
+message EventRotate {
+    string reason = 1;
+}
+
+message EventSpawn {
+    uint64 object_id = 1;
+
+    oneof object {
+        Entity entity = 2;
+        uint64 character_id = 3;
+        Player player = 4;
+    }
+}
+
+message EventRemove {
+    repeated uint64 object_ids = 2;
+}
+
+message EventTrigger {
+    uint64 source_id = 1;
+    uint32 trigger_id = 2;
+    uint32 trigger_signal_type = 3;
+    repeated uint64 players = 4;
+}
+
+message EventCounter {
+    uint64 target_id = 1;
+    uint64 source_id = 2;
+    uint32 type = 3;
+}
+
+message EventDeath {
+    uint64 target_id = 1;
+    uint64 source_id = 2;
+}
+
+message EventDamage {
+    message SingleDamageHit {
+        uint64 target_id = 1;
+        uint32 damage = 2;
+        uint32 dot = 3;
+        bool crit = 4;
+        bool back_attack = 5;
+        bool front_attack = 6;
+    }
+
+    uint64 source_id = 1;
+    uint32 skill_id = 2;
+    uint32 skill_effect_id = 3;
+    repeated SingleDamageHit hits = 4;
+}
+
+message EventStatusEffectAdd {
+    uint32 status_effect_id = 1;
+    uint32 effect_instance_id = 2;
+    uint64 source_id = 3;
+    uint64 target_id = 4;
+    uint64 end_tick = 5;
+    uint32 value = 6;
+    uint32 total_time = 7;
+}
+
+message EventStatusEffectUpdate {
+    uint32 effect_instance_id = 1;
+    uint64 player_id = 2;
+    uint32 value = 3;
+    uint64 expiration = 4;
+}
+
+message EventStatusEffectRemove {
+    uint64 object_id = 1;
+    uint32 reason = 2;
+    repeated uint32 status_effect_ids = 3;
+}
+
+message EventSkillUse {
+    uint64 source_id = 1;
+    SkillInfo skill_info = 3;
+}
+
+message EventStaggerState {
+    uint64 object_id = 1;
+    uint32 decrease_point = 2;
+    uint32 paralyzation_point = 3;
+    uint32 paralyzation_max_point = 4;
+}
+
+message EventPlayerHealth {
+    uint64 player_id = 1;
+    uint32 current_hp = 2;
+    uint32 max_hp = 3;
+}
+
+message Character {
+    uint64 character_id = 1;
+    string name = 2;
+    uint32 level = 3;
+    float gear_level = 4;
+    uint32 class_id = 5;
+}
+
+message Player {
+    uint32 party_id = 1;
+    Character character = 2;
+    bool is_local = 3;
+}
+
+message SkillInfo {
+    uint32 skill_id = 1;
+    uint32 level = 2;
+    uint32 tripod_index_1 = 3;
+    uint32 tripod_index_2 = 4;
+    uint32 tripod_index_3 = 5;
+    uint32 tripod_level_1 = 6;
+    uint32 tripod_level_2 = 7;
+    uint32 tripod_level_3 = 8;
+}
+
+message Entity {
+    uint64 object_id = 1;
+    uint64 owner_id = 2;
+    uint32 type_id = 3;
+    uint32 max_hp = 4;
+}
+
+enum BattleResult {
+    UNKNOWN = 0;
+    DUNGEON_CLEAR = 1;
+    DUNGEON_FAIL = 2;
+}
+
+message Battle {
+    google.protobuf.Timestamp start = 1;
+    google.protobuf.Timestamp end = 2;
+    uint32 encounter_id = 3;
+    map<uint64, Player> players = 4;
+    map<uint64, Entity> entities = 5;
+    repeated Event events = 6;
+    BattleResult result = 7;
+}
+
+message EventsBatch {
+    repeated Event events = 1;
+}

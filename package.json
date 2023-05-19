@@ -1,0 +1,19 @@
+{
+  "name": "shandi",
+  "description": "lost ark dps meter",
+  "private": true,
+  "workspaces": [
+    "data/",
+    "app/",
+    "land/",
+    "lsb/",
+    "shared/"
+  ],
+  "scripts": {
+    "clean": "pnpm run -r clean",
+    "build": "pnpm run -r build"
+  },
+  "devDependencies": {
+    "typescript": "~4.9.0"
+  }
+}

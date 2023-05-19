@@ -1,0 +1,44 @@
+{
+  "name": "@shandi/app",
+  "description": "shandi desktop application",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "clean": "rimraf dist"
+  },
+  "dependencies": {
+    "@shandi/data": "*",
+    "@shandi/lsb": "*",
+    "@shandi/shared": "*",
+    "autoprefixer": "^10.4.14",
+    "classnames": "^2.3.2",
+    "echarts": "^5.4.2",
+    "echarts-for-react": "^3.0.2",
+    "immer": "^10.0.1",
+    "immutable": "^4.3.0",
+    "postcss": "^8.4.23",
+    "react": "~18.2.0",
+    "react-dom": "~18.2.0",
+    "react-icons": "^4.8.0",
+    "react-router-dom": "^6.11.1",
+    "swr": "^2.1.5",
+    "tailwindcss": "^3.3.2",
+    "tslib": "^2.5.0",
+    "vite-plugin-static-copy": "^0.14.0",
+    "zstandard-wasm": "^1.5.0-rev.5",
+    "zustand": "^4.3.7"
+  },
+  "devDependencies": {
+    "@types/react": "~18.0.26",
+    "@types/react-dom": "~18.0.9",
+    "@vitejs/plugin-react": "~4.0.0",
+    "rimraf": "~5.0.0",
+    "typescript": "~4.9.3",
+    "vite": "~4.3.0",
+    "vite-tsconfig-paths": "~4.2.0"
+  }
+}

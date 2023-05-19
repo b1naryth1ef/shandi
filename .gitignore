@@ -1,0 +1,13 @@
+**/node_modules/
+**/dist/*
+/scratch.txt
+/shandi
+/shandi.exe
+**/yarn-error.log
+rsrc_windows_386.syso
+rsrc_windows_amd64.syso
+shandi.zip
+*.db
+*.exe.patch
+config.json
+*.log

@@ -1,0 +1,18 @@
+{
+  "extends": "./tsconfig.build.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@shandi/lsb/*": [
+        "lsb/src/*"
+      ],
+      "@shandi/data/*": [
+        "data/src/*"
+      ],
+      "@shandi/shared/*": [
+        "shared/src/*"
+      ]
+    },
+    "noEmit": true
+  }
+}
