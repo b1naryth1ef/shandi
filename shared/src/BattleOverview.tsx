@@ -8,6 +8,7 @@ import { RAID_BANNERS } from "@shandi/data/assets";
 import PlayerDamageTable from "./PlayerDamageTable";
 import BattleGraphs from "./BattleGraphs";
 import PlayerOverview from "./PlayerOverview";
+import BattleDebugOverlay from "./BattleDebugOverlay";
 
 function BattleBannerPlayerDetailsCard({
   player,
@@ -69,8 +70,9 @@ function TabItem({ children, to }: { to: string; children?: React.ReactNode }) {
           },
           {
             "border-transparent": !isActive,
-          },
-        )}
+          }
+        )
+      }
     >
       {children}
     </NavLink>
@@ -148,14 +150,17 @@ export function BattleBanner({
 function BattleContainer({
   battleStats,
   children,
+  showDebugOverlay,
 }: {
   battleStats: BattleStats;
   children?: React.ReactNode;
+  showDebugOverlay?: boolean;
 }) {
   const { playerId } = useParams();
 
   return (
     <div>
+      {showDebugOverlay && <BattleDebugOverlay battleStats={battleStats} />}
       <BattleBanner
         encounter={battleStats.encounter}
         battleStats={battleStats}
@@ -176,10 +181,12 @@ export default function BattleOverview({
   battleStats,
   opts,
   children,
+  showDebugOverlay,
 }: {
   battleStats: BattleStats;
   opts?: BattleOverviewOpts;
   children?: React.ReactNode;
+  showDebugOverlay?: boolean;
 }) {
   opts = opts || { onlyShowPlayers: true, filterTargets: true };
 
@@ -188,7 +195,11 @@ export default function BattleOverview({
       <Route
         path="/"
         element={
-          <BattleContainer battleStats={battleStats} children={children} />
+          <BattleContainer
+            battleStats={battleStats}
+            children={children}
+            showDebugOverlay={showDebugOverlay}
+          />
         }
       >
         <Route

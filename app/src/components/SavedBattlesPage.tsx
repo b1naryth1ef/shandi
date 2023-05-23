@@ -7,6 +7,7 @@ import { Route, Routes, useNavigate, useParams } from "react-router-dom";
 import useSWR from "swr";
 import { useSavedBattle } from "../stores/SavedBattleStore";
 import { openInExternalBrowser } from "../util/webview";
+import { useSettingsStore } from "../stores/SettingsStore";
 
 function groupBy<T>(items: Array<T>, key: string): Record<any, Array<T>> {
   return items.reduce(
@@ -79,10 +80,14 @@ export function SavedBattlesList() {
 export function SavedBattleView() {
   const { id } = useParams();
   const savedBattle = useSavedBattle(id);
+  const settings = useSettingsStore((state) => state.settings);
 
-  if (!savedBattle) return <></>;
+  if (!savedBattle || !settings) return <></>;
   return (
-    <BattleOverview battleStats={savedBattle.stats}>
+    <BattleOverview
+      battleStats={savedBattle.stats}
+      showDebugOverlay={settings.developer}
+    >
       <div className="flex flex-row text-gray-50 ml-auto gap-2 rounded-sm p-2 mt-auto">
         <button
           onClick={async () => {
