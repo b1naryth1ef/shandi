@@ -18,6 +18,9 @@ type PacketStreamDecoderOpts struct {
 	PoodlePath string
 	OodleState []byte
 	XORKey     []byte
+
+	// You want this as false unless your decoding a previously recorded pcap
+	UseStreamTimestamps bool
 }
 
 // PacketStreamDecoder decodes a stream of packets (generally a pcap handle)
@@ -25,6 +28,7 @@ type PacketStreamDecoder struct {
 	decoder *Decoder
 	done    chan struct{}
 	packets chan *DecodedPacket
+	opts    *PacketStreamDecoderOpts
 }
 
 func NewPacketStreamDecoder(opts *PacketStreamDecoderOpts) (*PacketStreamDecoder, error) {
@@ -37,6 +41,7 @@ func NewPacketStreamDecoder(opts *PacketStreamDecoderOpts) (*PacketStreamDecoder
 		decoder: NewDecoder(oodle, NewXOR(opts.XORKey)),
 		done:    make(chan struct{}),
 		packets: make(chan *DecodedPacket),
+		opts:    opts,
 	}, nil
 
 }
@@ -110,7 +115,9 @@ func (g *gameStream) run() {
 		}
 
 		if ptr != nil {
-			ptr.Timestamp = g.currentTime
+			if g.parent.opts.UseStreamTimestamps {
+				ptr.Timestamp = g.currentTime
+			}
 			g.parent.packets <- ptr
 		}
 	}

@@ -16,9 +16,10 @@ func importPcap(app *App, path string) error {
 	}
 
 	decoder, err := protocol.NewPacketStreamDecoder(&protocol.PacketStreamDecoderOpts{
-		PoodlePath: app.poodlePath,
-		OodleState: data.OodleStateBin,
-		XORKey:     data.XORKeyBin,
+		PoodlePath:          app.poodlePath,
+		OodleState:          data.OodleStateBin,
+		XORKey:              data.XORKeyBin,
+		UseStreamTimestamps: true,
 	})
 	if err != nil {
 		return err
