@@ -374,7 +374,7 @@ export default function PlayerDamageTable({
           );
         }
 
-        return <></>;
+        return <div key={key}></div>;
       })}
     </div>
   );
