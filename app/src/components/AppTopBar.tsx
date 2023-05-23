@@ -1,20 +1,10 @@
-import {
-  BiBible,
-  BiChart,
-  BiErrorCircle,
-  BiMinus,
-  BiPauseCircle,
-  BiPlayCircle,
-  BiReset,
-  BiX,
-} from "react-icons/bi";
 import classNames from "classnames";
-import { isStatusOk, useStatusStore } from "../stores/StatusStore";
-import { Link, NavLink, useLocation, useMatch } from "react-router-dom";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useLiveBattleStore } from "../stores/LiveBattleStore";
-import { isWebView, postWebViewMessage } from "../util/webview";
+import { BiBible, BiChart, BiErrorCircle, BiMinus, BiX } from "react-icons/bi";
+import { Link, NavLink, useLocation, useMatch } from "react-router-dom";
 import { useSettingsStore } from "../stores/SettingsStore";
+import { isStatusOk, useStatusStore } from "../stores/StatusStore";
+import { isWebView, postWebViewMessage } from "../util/webview";
 
 import { TabItem, Tabs, TopBar } from "@shandi/shared/src/TopBar";
 
@@ -111,11 +101,6 @@ function BibleDropdown({
 export default function AppTopBar() {
   const status = useStatusStore((state) => state.status);
   const isOk = useMemo(() => isStatusOk(status), [status]);
-  const [setPaused, rotate, isPaused] = useLiveBattleStore((state) => [
-    state.setPaused,
-    state.rotate,
-    state.pauseQueue !== null,
-  ]);
   const settings = useSettingsStore((state) => state.settings);
   const [showBible, setShowBible] = useState(false);
 
@@ -129,16 +114,7 @@ export default function AppTopBar() {
             {settings?.developer && (
               <BibleDropdown show={showBible} setShow={setShowBible} />
             )}
-            <button onClick={rotate} className="px-0.5">
-              <BiReset className="h-6 w-6 text-blue-500" />
-            </button>
-            <button onClick={() => setPaused(!isPaused)} className="px-0.5">
-              {!isPaused && (
-                <BiPauseCircle className="h-6 w-6 text-yellow-500" />
-              )}
-              {isPaused && <BiPlayCircle className="h-6 w-6 text-green-500" />}
-            </button>
-            <NavLink to="/status" className="pl-0.5">
+            <NavLink to="/status" className="pl-0.5 pr-2">
               {!isOk && <BiErrorCircle className="h-6 w-6 text-red-500" />}
               {isOk && <BiChart className="h-6 w-6 text-green-500" />}
             </NavLink>

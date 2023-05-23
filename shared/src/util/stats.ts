@@ -116,6 +116,25 @@ export class BattleStats {
     return (this.battle.end!!.getTime() - this.battle.start!!.getTime()) / 1000;
   }
 
+  getPlayerStatsList(onlyShowPlayers?: boolean): Array<[string, PlayerStats]> {
+    return Array.from(this.playerStats.entries())
+      .filter(([key, stats]) => {
+        if (key === "0") {
+          return false;
+        }
+
+        if (onlyShowPlayers) {
+          const player = this.battle.players[key];
+          return player !== undefined;
+        }
+
+        return stats.damage > 0;
+      })
+      .sort(([_, a], [_2, b]) => {
+        return b.damage - a.damage;
+      });
+  }
+
   getId(sourceId: string): string {
     const entity = this.battle.entities[sourceId];
     if (entity !== undefined && entity.ownerId) {

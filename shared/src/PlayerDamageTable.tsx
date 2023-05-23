@@ -331,28 +331,20 @@ function PlayerDamageRow({
 export default function PlayerDamageTable({
   battleStats,
   onlyShowPlayers,
+  emptyState,
 }: {
   battleStats: BattleStats;
   onlyShowPlayers?: boolean;
+  emptyState?: JSX.Element;
 }) {
-  const players = useMemo(() => {
-    return Array.from(battleStats.playerStats.entries())
-      .filter(([key, stats]) => {
-        if (key === "0") {
-          return false;
-        }
+  const players = useMemo(
+    () => battleStats.getPlayerStatsList(onlyShowPlayers),
+    [battleStats, onlyShowPlayers]
+  );
 
-        if (onlyShowPlayers) {
-          const player = battleStats.battle.players[key];
-          return player !== undefined;
-        }
-
-        return stats.damage > 0;
-      })
-      .sort(([_, a], [_2, b]) => {
-        return b.damage - a.damage;
-      });
-  }, [battleStats, onlyShowPlayers]);
+  if (players.length === 0 && emptyState) {
+    return emptyState;
+  }
 
   return (
     <div className="flex flex-col bg-white divide-y divide-gray-900">
