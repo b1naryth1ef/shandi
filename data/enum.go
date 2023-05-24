@@ -12,21 +12,6 @@ type Enum map[string]int
 
 var enums map[string]Enum
 
-func EnumReverseValue(name string, value int) string {
-	data, ok := enums[name]
-	if !ok {
-		log.Panicf("Bad enum name: %v", name)
-	}
-
-	for k, v := range data {
-		if v == value {
-			return k
-		}
-	}
-
-	return ""
-}
-
 func EnumValue[T constraints.Integer](name string, key string) T {
 	a, ok := enums[name]
 	if !ok {
