@@ -1,6 +1,7 @@
 package data
 
 import (
+	"encoding/json"
 	"log"
 	"strconv"
 
@@ -39,7 +40,9 @@ func EnumValue[T constraints.Integer](name string, key string) T {
 }
 
 func init() {
-	enumData, err := OpenDatabase("Enums")
+	var enumData map[string]interface{}
+
+	err := json.Unmarshal(enumDatabaseRaw, &enumData)
 	if err != nil {
 		panic(err)
 	}
