@@ -1,7 +1,7 @@
 import { Character } from "@shandi/lsb/lsb";
 import { create } from "zustand";
 
-export const SUPPORTED_LOST_ARK_VERSIONS = ["2.16.1.1"];
+export const SUPPORTED_LOST_ARK_VERSIONS = ["2.16.1.1", "2.16.3.1"];
 
 export type Status = {
   game_version: string | null;
