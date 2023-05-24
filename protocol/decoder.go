@@ -47,52 +47,59 @@ func isBasicType(t reflect.Kind) bool {
 		t == reflect.Bool)
 }
 
+// Decode reads data from the provided reader into a pointer to a packet structure
 func Decode(buff io.Reader, container interface{}) error {
 	containerType := reflect.TypeOf(container)
 	containerValue := reflect.ValueOf(container)
 
 	if containerType.Kind() != reflect.Pointer || containerType.Elem().Kind() != reflect.Struct {
-		log.Printf("%v / %v", containerType, containerValue)
-		panic("must decode into pointer of struct")
+		log.Panicf("Decode() expectes a pointer to a packet structure, instead it got: %v (%v)", containerType, containerValue)
 	}
 
 	innerType := containerType.Elem()
 	innerValue := containerValue.Elem()
 
+	// iterate over all the packet fields
 	for i := 0; i < innerType.NumField(); i++ {
 		field := innerType.Field(i)
+
+		// pointer means this is an optional field which requires extra decoding effort
 		if field.Type.Kind() == reflect.Pointer {
-			// TODO: optional check
 			more, err := binaryRead[bool](buff)
-			if err == io.ErrUnexpectedEOF || err == io.EOF {
-				log.Printf("Failed to decode %v", field.Name)
-			}
 
 			if err != nil {
+				if err == io.ErrUnexpectedEOF || err == io.EOF {
+					log.Printf("[protocol] failed to read optional flag for field %v inside %v", field.Name, containerType.Name())
+				}
+
 				return err
 			}
 
-			if more {
-				value := reflect.New(field.Type.Elem())
-				err := DecodeField(buff, value)
-
-				if err == io.ErrUnexpectedEOF || err == io.EOF {
-					log.Printf("Failed to decode field %v", field.Name)
-				}
-
-				if err != nil {
-					return err
-				}
-				innerValue.Field(i).Set(value)
+			// if the flag is false we skip reading this field
+			if !more {
+				continue
 			}
+
+			// create a new instance for the decoded value to live in, if decoding is
+			//  successful we will store this pointer within the field
+			value := reflect.New(field.Type.Elem())
+			err = DecodeField(buff, value)
+
+			if err != nil {
+				if err == io.ErrUnexpectedEOF || err == io.EOF {
+					log.Printf("[protocol] failed to decode field %v inside %v", field.Name, containerType.Name())
+				}
+				return err
+			}
+
+			innerValue.Field(i).Set(value)
 		} else {
 			err := DecodeField(buff, innerValue.Field(i).Addr())
 
-			if err == io.ErrUnexpectedEOF || err == io.EOF {
-				log.Printf("Failed to decode field %v", field.Name)
-			}
-
 			if err != nil {
+				if err == io.ErrUnexpectedEOF || err == io.EOF {
+					log.Printf("[protocol] failed to decode field %v inside %v", field.Name, containerType.Name())
+				}
 				return err
 			}
 		}
@@ -132,6 +139,7 @@ func DecodeField(buff io.Reader, field reflect.Value) error {
 	} else if field.Type().Kind() == reflect.Pointer && field.Type().Elem().Kind() == reflect.Struct {
 		return Decode(buff, field.Interface())
 	} else if field.Type().Elem().Kind() == reflect.Array && field.Type().Elem().Elem().Kind() == reflect.Uint8 {
+		// read a sized byte buffer
 		ptr := field.Elem().Slice(0, field.Elem().Len()).Bytes()
 		_, err := buff.Read(ptr)
 		if err != nil {
