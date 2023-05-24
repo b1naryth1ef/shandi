@@ -1,10 +1,16 @@
-win64cgo := "CGO_ENABLED=1 CXX=x86_64-w64-mingw32-g++ CC=x86_64-w64-mingw32-gcc GOOS=windows GOARCH=amd64"
 wingoargs := '-ldflags "-s -w -H=windowsgui -extldflags=-static"'
 
-dev *args:
+dev-app *args:
 	go run app/cmd/shandi/main.go {{args}}
 
+dev-land *args:
+	go run land/cmd/shandi-land-server/main.go {{args}}
+
+build: build-app-full build-land-full
+
 build-app-full: build-app-frontend build-app
+
+build-land-full: build-land-frontend build-land
 
 [linux]
 build-app:
@@ -15,15 +21,22 @@ build-app:
 build-app: generate-app-winres
 	go build -o shandi.exe {{wingoargs}} app/cmd/shandi/main.go
 
+build-land:
+	go build -o shandi-land land/cmd/shandi-land-server/main.go
+
 generate-app-winres:
 	cd app && go-winres make 
 
 # cross compile the app onto windows (assuming you have mingw32 installed)
+win64cgo := "CGO_ENABLED=1 CXX=x86_64-w64-mingw32-g++ CC=x86_64-w64-mingw32-gcc GOOS=windows GOARCH=amd64"
 build-app-xc-windows: generate-app-winres
 	{{win64cgo}} go build -o shandi.exe {{wingoargs}} app/cmd/shandi/main.go
 
 build-app-frontend:
 	cd app && yarn build
+
+build-land-frontend:
+	cd land && yarn build
 
 # generate packets from meter-core
 generate-packets *args:
@@ -42,6 +55,7 @@ pull-meter-data:
 
 update:
 	git submodule update --init --recursive
+	yarn
 
 setup:
 	go install github.com/tc-hib/go-winres@latest
