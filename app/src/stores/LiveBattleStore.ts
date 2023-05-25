@@ -1,7 +1,7 @@
 import { Event } from "@shandi/lsb/lsb";
+import { BattleStats, BattleStatsOpts } from "@shandi/shared/src/util/stats";
 import { produce } from "immer";
 import { create } from "zustand";
-import { BattleStats } from "@shandi/shared/src/util/stats";
 
 export type LiveBattleStore = {
   battleStats: BattleStats;
@@ -9,6 +9,7 @@ export type LiveBattleStore = {
   setPaused: (v: boolean) => void;
   rotate: () => void;
   processEvents: (events: Array<Event>, ignorePauseQueue?: boolean) => void;
+  copy: (opts?: BattleStatsOpts) => void;
 };
 
 export const useLiveBattleStore = create<LiveBattleStore>((set, get) => {
@@ -52,12 +53,19 @@ export const useLiveBattleStore = create<LiveBattleStore>((set, get) => {
     });
   };
 
+  const copy = (opts?: BattleStatsOpts) => {
+    set((state) => {
+      return { ...state, battleStats: state.battleStats.copy(opts) };
+    });
+  };
+
   return {
     battleStats: new BattleStats(),
     pauseQueue: null,
     setPaused,
     rotate,
     processEvents,
+    copy,
   };
 });
 

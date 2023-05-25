@@ -15,17 +15,19 @@ export type BattleStatsOpts = {
   filterTarget?: (target: number) => boolean;
 };
 
+export const filterOnlyBossTargets = (target: number) => {
+  const info = getNPCInfo(target);
+  return (
+    info !== undefined &&
+    (info.grade === "boss" ||
+      info.grade === "commander" ||
+      info.grade === "raid")
+  );
+};
+
 export function getDefaultBattleStatsOpts(): BattleStatsOpts {
   return {
-    filterTarget: (target: number) => {
-      const info = getNPCInfo(target);
-      return (
-        info !== undefined &&
-        (info.grade === "boss" ||
-          info.grade === "commander" ||
-          info.grade === "raid")
-      );
-    },
+    filterTarget: filterOnlyBossTargets,
   };
 }
 
@@ -112,6 +114,10 @@ export class BattleStats {
     }
   }
 
+  copy(opts?: BattleStatsOpts): BattleStats {
+    return new BattleStats(this.id, { battle: this.battle, ...opts });
+  }
+
   duration() {
     return (this.battle.end!!.getTime() - this.battle.start!!.getTime()) / 1000;
   }
@@ -123,9 +129,8 @@ export class BattleStats {
           return false;
         }
 
-        if (onlyShowPlayers) {
-          const player = this.battle.players[key];
-          return player !== undefined;
+        if (onlyShowPlayers && this.battle.players[key] === undefined) {
+          return false;
         }
 
         return stats.damage > 0;
