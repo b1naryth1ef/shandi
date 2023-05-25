@@ -15,6 +15,8 @@ type CaptureCtx struct {
 	OnBattleStart func(battle *lsb.PendingBattle)
 	OnEvent       func(event *proto.Event)
 	OnBattleDone  func(battle *proto.Battle)
+
+	Stats *protocol.PacketStreamStats
 }
 
 type LiveCaptureStatus struct {
@@ -105,9 +107,10 @@ func newLiveCapture(name string, ctx *CaptureCtx) (*liveCapture, error) {
 
 func (c *liveCapture) run(handle *pcap.Handle) {
 	decoder, err := protocol.NewPacketStreamDecoder(&protocol.PacketStreamDecoderOpts{
-		PoodlePath: c.ctx.PoodlePath,
-		OodleState: data.OodleStateBin,
-		XORKey:     data.XORKeyBin,
+		PoodlePath:        c.ctx.PoodlePath,
+		OodleState:        data.OodleStateBin,
+		XORKey:            data.XORKeyBin,
+		PacketStreamStats: c.ctx.Stats,
 	})
 	if err != nil {
 		panic(err)

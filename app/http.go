@@ -10,10 +10,12 @@ import (
 	"os/exec"
 	"runtime"
 	"sync"
+	"time"
 
 	"github.com/alioygur/gores"
 	"github.com/b1naryth1ef/shandi/app/db"
 	"github.com/b1naryth1ef/shandi/lsb"
+	"github.com/b1naryth1ef/shandi/shared"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"google.golang.org/protobuf/encoding/protojson"
@@ -41,6 +43,7 @@ func NewHTTPServer(app *App) *HTTPServer {
 
 	r.Route("/api", func(r chi.Router) {
 		r.Get("/events", h.routeStreamEvents)
+		r.Get("/stream/packet-stream-stats", h.routeStreamStats)
 		r.Get("/status", h.routeStatus)
 
 		r.Get("/settings", h.routeGetSettings)
@@ -218,6 +221,28 @@ func (h *HTTPServer) routeStreamEvents(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+	}
+}
+
+func (h *HTTPServer) routeStreamStats(w http.ResponseWriter, r *http.Request) {
+	sse, err := shared.NewSSEResponse(w)
+	if err != nil {
+		logger.Error().Err(err).Msg("failed to create sse response")
+		return
+	}
+
+	ticker := time.NewTicker(time.Second * 1)
+	for {
+		select {
+		case <-ticker.C:
+			err := sse.WriteJSON(*h.app.packetStreamStats)
+			if err != nil {
+				logger.Error().Err(err).Msg("failed to write to sse stream")
+				return
+			}
+		case <-sse.Done:
+			return
+		}
 	}
 }
 

@@ -15,6 +15,7 @@ import (
 	"github.com/b1naryth1ef/shandi/lsb"
 	proto "github.com/b1naryth1ef/shandi/lsb/proto/v1"
 	"github.com/b1naryth1ef/shandi/poodle"
+	"github.com/b1naryth1ef/shandi/protocol"
 	"github.com/google/go-github/v52/github"
 	"github.com/rs/zerolog"
 	"github.com/spacemeshos/poet/appdata"
@@ -41,6 +42,8 @@ type App struct {
 	logger     *AppLogger
 	window     WindowImpl
 	poodlePath string
+
+	packetStreamStats *protocol.PacketStreamStats
 }
 
 type AppLogger struct {
@@ -92,10 +95,11 @@ func NewApp(opts Opts) (*App, error) {
 	}
 
 	app := &App{
-		Opts:       opts,
-		Settings:   settings,
-		poodlePath: poodlePath,
-		logger:     appLogger,
+		Opts:              opts,
+		Settings:          settings,
+		poodlePath:        poodlePath,
+		logger:            appLogger,
+		packetStreamStats: &protocol.PacketStreamStats{},
 	}
 
 	// ayyylmao
@@ -104,6 +108,7 @@ func NewApp(opts Opts) (*App, error) {
 
 	app.LiveCaptureManager = NewLiveCaptureManager(CaptureCtx{
 		PoodlePath: poodlePath,
+		Stats:      app.packetStreamStats,
 		OnBattleStart: func(battle *lsb.PendingBattle) {
 			app.PushEvent("LIVE_BATTLE_START", nil)
 		},
@@ -201,10 +206,11 @@ func (a *App) PushEvent(event string, data any) error {
 }
 
 type Status struct {
-	GameVersion    *string            `json:"game_version"`
-	LiveCapture    *LiveCaptureStatus `json:"live_capture"`
-	NewVersion     bool               `json:"new_version"`
-	LocalCharacter *proto.Character   `json:"local_character"`
+	GameVersion       *string                    `json:"game_version"`
+	LiveCapture       *LiveCaptureStatus         `json:"live_capture"`
+	NewVersion        bool                       `json:"new_version"`
+	LocalCharacter    json.RawMessage            `json:"local_character"`
+	PacketStreamStats protocol.PacketStreamStats `json:"packet_stream_stats"`
 }
 
 func (a *App) GetStatus() *Status {
@@ -215,14 +221,23 @@ func (a *App) GetStatus() *Status {
 	}
 
 	status := &Status{
-		GameVersion: gameVersionPtr,
-		LiveCapture: a.LiveCaptureManager.GetStatus(),
-		NewVersion:  a.newRelease != nil,
+		GameVersion:       gameVersionPtr,
+		LiveCapture:       a.LiveCaptureManager.GetStatus(),
+		NewVersion:        a.newRelease != nil,
+		PacketStreamStats: *a.packetStreamStats,
 	}
 
 	gen := a.LiveCaptureManager.GetCurrentGenerator()
 	if gen != nil {
-		status.LocalCharacter = gen.GetCurrentCharacter()
+		localCharacter := gen.GetCurrentCharacter()
+		if localCharacter != nil {
+			data, err := protojson.Marshal(localCharacter)
+			if err != nil {
+				logger.Error().Err(err).Interface("character", localCharacter).Msg("failed to marshal local character")
+			} else {
+				status.LocalCharacter = data
+			}
+		}
 	}
 
 	return status
@@ -250,7 +265,7 @@ func (a *App) Run() {
 
 	go func() {
 		for {
-			time.Sleep(time.Second * 10)
+			time.Sleep(time.Second * 6)
 			a.PushEvent("STATUS_UPDATE", a.GetStatus())
 		}
 	}()

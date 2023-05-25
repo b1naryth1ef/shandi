@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"io"
 	"log"
+	"sync/atomic"
 	"time"
 
 	"github.com/b1naryth1ef/shandi/poodle"
@@ -14,6 +15,12 @@ import (
 	"github.com/google/gopacket/tcpassembly/tcpreader"
 )
 
+type PacketStreamStats struct {
+	Received  uint64 `json:"received"`
+	Processed uint64 `json:"processed"`
+	Decoded   uint64 `json:"decoded"`
+}
+
 type PacketStreamDecoderOpts struct {
 	PoodlePath string
 	OodleState []byte
@@ -21,6 +28,9 @@ type PacketStreamDecoderOpts struct {
 
 	// You want this as false unless your decoding a previously recorded pcap
 	UseStreamTimestamps bool
+
+	// Keep this nil unless you want to collect stats
+	PacketStreamStats *PacketStreamStats
 }
 
 // PacketStreamDecoder decodes a stream of packets (generally a pcap handle)
@@ -78,6 +88,10 @@ func (p *PacketStreamDecoder) Run(handle *pcap.Handle) {
 				continue
 			}
 
+			if p.opts.PacketStreamStats != nil {
+				atomic.AddUint64(&p.opts.PacketStreamStats.Received, 1)
+			}
+
 			tcp := packet.TransportLayer().(*layers.TCP)
 			assembler.AssembleWithTimestamp(packet.NetworkLayer().NetworkFlow(), tcp, packet.Metadata().Timestamp)
 		case <-p.done:
@@ -103,6 +117,11 @@ func (g *gameStream) run() {
 
 	for {
 		ptr, err := g.parent.decoder.Decode(reader)
+
+		if g.parent.opts.PacketStreamStats != nil {
+			atomic.AddUint64(&g.parent.opts.PacketStreamStats.Processed, 1)
+		}
+
 		if err != ErrUnknownOpcode {
 			if err == io.EOF {
 				return
@@ -118,6 +137,11 @@ func (g *gameStream) run() {
 			if g.parent.opts.UseStreamTimestamps {
 				ptr.Timestamp = g.currentTime
 			}
+
+			if g.parent.opts.PacketStreamStats != nil {
+				atomic.AddUint64(&g.parent.opts.PacketStreamStats.Decoded, 1)
+			}
+
 			g.parent.packets <- ptr
 		}
 	}

@@ -1,36 +1,36 @@
-import { BattleStats, BattleStatsOpts } from "@shandi/shared/src/util/stats";
 import { Battle, EventsBatch } from "@shandi/lsb/lsb";
+import { BattleStats, BattleStatsOpts } from "@shandi/shared/src/util/stats";
 import { useLiveBattleStore } from "../stores/LiveBattleStore";
 import { Settings, useSettingsStore } from "../stores/SettingsStore";
 import { Status, useStatusStore } from "../stores/StatusStore";
 
 export type Event =
   | {
-    e: "SETTINGS_UPDATE";
-    d: Settings;
-  }
+      e: "SETTINGS_UPDATE";
+      d: Settings;
+    }
   | {
-    e: "STATUS_UPDATE";
-    d: Status;
-  }
+      e: "STATUS_UPDATE";
+      d: Status;
+    }
   | {
-    e: "LIVE_BATTLE_START";
-    d: null | string;
-  }
+      e: "LIVE_BATTLE_START";
+      d: null | string;
+    }
   | {
-    e: "LIVE_BATTLE_EVENTS";
-    d: string;
-  }
+      e: "LIVE_BATTLE_EVENTS";
+      d: string;
+    }
   | {
-    e: "BATTLE_DELETE";
-    d: string;
-  }
+      e: "BATTLE_DELETE";
+      d: string;
+    }
   | {
-    e: "APP_LOG";
-    d: string;
-  };
+      e: "APP_LOG";
+      d: string;
+    };
 
-export class EventsClient {
+export class EventSourceClient<EventT> {
   private url: string;
   private eventSource: EventSource | null;
 
@@ -43,15 +43,15 @@ export class EventsClient {
     this.eventSource?.close();
   }
 
-  run(onEvent: (event: Event) => void) {
+  run(onEvent: (event: EventT) => void) {
     this.eventSource = new EventSource(this.url);
     this.eventSource.onmessage = (event) => {
-      const ourEvent = JSON.parse(event.data) as Event;
+      const ourEvent = JSON.parse(event.data) as EventT;
       onEvent(ourEvent);
     };
     this.eventSource.onerror = () => {
       console.error(
-        "[EventsClient] event source error, reopening in 5 seconds"
+        "[EventSourceClient] event source error, reopening in 5 seconds"
       );
       setTimeout(() => this.run(onEvent), 5000);
     };
@@ -63,7 +63,7 @@ export function setupEvents() {
     (window as any).client.close();
   }
 
-  let client = new EventsClient(`/api/events`);
+  let client = new EventSourceClient<Event>(`/api/events`);
   (window as any).client = client;
   client.run((event) => {
     if (event.e === "SETTINGS_UPDATE") {
